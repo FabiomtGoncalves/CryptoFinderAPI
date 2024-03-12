@@ -1,0 +1,6 @@
+@CryptoFinderAPI_HostAddress = http://localhost:5139
+
+GET {{CryptoFinderAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
