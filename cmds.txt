@@ -1,0 +1,5 @@
+Add-Migration Initial
+
+Update-Database
+
+Connection -> "Server=localhost;Database=CryptoApi;Trusted_Connection=True;TrustServerCertificate=true;"
