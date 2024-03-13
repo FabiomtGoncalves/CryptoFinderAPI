@@ -18,6 +18,14 @@ namespace CryptoFinderAPI.Controllers
         }
 
         [HttpGet]
+        [Route("ping")]
+        public async Task<ActionResult> Ping()
+        {
+            return Ok("Ping with success! :)");
+        }
+
+        [HttpGet]
+        [Route("all")]
         public async Task<ActionResult<List<Crypto>>> GetAllCryptos()
         {
             var cryptos = await _context.Cryptos.ToListAsync();
@@ -50,9 +58,29 @@ namespace CryptoFinderAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult<List<Crypto>>> UpdateCrypto(Crypto crypto)
+        public async Task<ActionResult<List<Crypto>>> UpdateCrypto(Crypto updatedCrypto)
         {
-            _context.Cryptos.Add(crypto);
+            var dbCrypto = await _context.Cryptos.FindAsync(updatedCrypto.Id);
+            if (dbCrypto is null)
+                return NotFound("Crypto not found.");
+
+            dbCrypto.Name = updatedCrypto.Name;
+            dbCrypto.Symbol = updatedCrypto.Symbol;
+            dbCrypto.Desc = updatedCrypto.Desc;
+
+
+            return Ok(await _context.Cryptos.ToListAsync());
+        }
+
+
+        [HttpDelete]
+        public async Task<ActionResult<List<Crypto>>> DeleteCrypto(int id)
+        {
+            var dbCrypto = await _context.Cryptos.FindAsync(id);
+            if (dbCrypto is null)
+                return NotFound("Crypto not found.");
+
+            _context.Cryptos.Remove(dbCrypto);
             await _context.SaveChangesAsync();
 
             return Ok(await _context.Cryptos.ToListAsync());
